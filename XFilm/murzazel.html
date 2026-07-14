@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотр: МУРЗАЗЕЛЬ</title>
+    <style>
+        body { background-color: #0b0f19; color: #ffffff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { background-color: #161f30; padding: 30px; border-radius: 15px; text-align: center; max-width: 700px; width: 100%; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        h1 { color: #00ff66; margin-bottom: 5px; }
+        h3 { color: #a0aec0; margin-top: 0; font-weight: 400; font-size: 14px; }
+        .movie-info-block { background: #0b0f19; padding: 12px; border-radius: 6px; font-size: 14px; margin: 15px 0; border-left: 3px solid #2b6cb0; color: #cbd5e0; }
+        .player-desc { font-size: 14px; color: #cbd5e0; margin: 15px 0; line-height: 1.4; background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #2d3748; }
+        
+        video { width: 100%; border-radius: 10px; border: 2px solid #2d3748; margin-top: 15px; background-color: #000; }
+        
+        button { width: auto; padding: 10px 20px; background-color: #4a5568; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: all 0.3s ease; }
+        button:hover { background-color: #718096; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        
+        select, textarea { width: 96%; padding: 12px; margin: 8px 0; border: 2px solid #2d3748; border-radius: 8px; background-color: #0b0f19; color: white; font-size: 15px; font-family: sans-serif; }
+        select:focus, textarea:focus { border-color: #00ff66; outline: none; }
+
+        /* ИНДИКАТОРЫ И НЕОНОВАЯ ПОДСВЕТКА НА ОСНОВЕ ОЦЕНОК */
+        .reviews-section { margin-top: 30px; border-top: 2px dashed #2d3748; padding-top: 20px; text-align: left; }
+        .review-card { padding: 15px; margin: 12px 0; border-radius: 10px; font-size: 14px; background-color: #0b0f19; transition: all 0.3s ease; }
+        
+        .review-score { display: inline-block; padding: 3px 8px; border-radius: 5px; font-weight: bold; font-size: 15px; margin-right: 10px; }
+        
+        /* Автоматические цвета подсветок стен */
+        .score-good { border: 2px solid #00ff66; box-shadow: 0 0 15px rgba(0, 255, 102, 0.3); color: #e6fffa; }
+        .score-neutral { border: 2px solid #a0aec0; box-shadow: 0 0 15px rgba(160, 174, 192, 0.2); color: #edf2f7; }
+        .score-bad { border: 2px solid #ff4d4d; box-shadow: 0 0 15px rgba(255, 77, 77, 0.3); color: #fff5f5; }
+        
+        .badge-good { background-color: #00ff66; color: #0b0f19; }
+        .badge-neutral { background-color: #4a5568; color: #ffffff; border: 1px solid #a0aec0; }
+        .badge-bad { background-color: #ff4d4d; color: #ffffff; }
+        
+        .review-author { font-weight: bold; font-size: 13px; margin-bottom: 8px; color: #cbd5e0; display: flex; justify-content: space-between; align-items: center; }
+        .review-text { line-height: 1.4; white-space: pre-wrap; }
+        .del-review-btn { background: none; color: #ff4d4d; border: none; padding: 0; font-size: 12px; cursor: pointer; text-decoration: underline; font-weight: normal; margin-left: 10px; width: auto; margin-top: 0; }
+        .del-review-btn:hover { color: #ff3333; text-shadow: 0 0 5px #ff4d4d; }
+                /* СТИЛИ ДЛЯ РАЗДЕЛA СИМУЛЯЦИИ КИНОКОМАНДЫ */
+        .team-section { margin-top: 30px; border-top: 2px dashed #2d3748; padding-top: 20px; text-align: left; }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-top: 15px; }
+        .team-card { background-color: #0b0f19; border: 1px solid #2d3748; border-radius: 8px; padding: 12px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.3s ease; }
+        .team-card:hover { border-color: #00ff66; box-shadow: 0 0 12px rgba(0, 255, 102, 0.2); transform: scale(1.03); }
+        .team-avatar { width: 65px; height: 63px; background: #161f30; border-radius: 50%; margin: 0 auto 8px auto; display: flex; justify-content: center; align-items: center; font-size: 24px; border: 2px solid #2b6cb0; }
+        .team-name { font-weight: bold; font-size: 14px; color: #ffffff; margin-bottom: 2px; }
+        .team-role { font-size: 11px; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.5px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>МУРЗАЗЕЛЬ</h1>
+
+        <div class="movie-info-block">
+            📅 <strong>Год:</strong> 2026 г. | 🌍 <strong>Страна:</strong> Россия | 📍 <strong>Город съёмок:</strong> Тюмень
+        </div>
+        
+        <div class="player-desc">
+            <strong>Описание:</strong> Маркиз Барсович Мурдорин расследует дело о тайном ордене насекомых в теплице.
+        </div>
+
+        <video controls src="ССЫЛКА_НА_ОБЛАКО"></video>
+                <!-- РАЗДЕЛ: СОЗДАТЕЛИ И АКТЕРЫ -->
+               <!-- РАЗДЕЛ: СОЗДАТЕЛИ И АКТЕРЫ С ФОТОГРАФИЯМИ -->
+        <div class="team-section">
+            <h2 style="color: #00ff66; font-size: 20px; margin-bottom: 5px;">Создатели и актеры</h2>
+            <div class="team-grid">
+                
+                <!-- РЕЖИССЕР -->
+                <div class="team-card">
+                    <img src="ССЫЛКА_НА_ВАШЕ_ФОТО" alt="Режиссер" style="width: 65px; height: 65px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid #00ff66;">
+                    <div class="team-name">Давид Ващенко</div>
+                    <div class="team-role">Режиссер / Продюсер</div>
+                </div>
+
+                <!-- МАРКИЗ БАРСОВИЧ -->
+                <div class="team-card">
+                    <img src="krasavchik.jpg" alt="Маркиз" style="width: 65px; height: 65px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid #d69e2e;">
+                    <div class="team-name">Красавчик</div>
+                    <div class="team-role">В роли Мурдорина</div>
+                </div>
+
+            </div>
+        </div>
+        <br>
+        
+        <button onclick="window.location.href='index.html'">⬅ Назад в каталог</button>
+
+        <div class="reviews-section">
+            <h2 style="color: #00ff66; font-size: 20px; margin-bottom: 15px;">Рецензии и оценки</h2>
+            
+            <div id="addReviewForm" class="hidden" style="background: #161f30; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #2d3748;">
+                <h4 style="margin: 0 0 5px 0; color: #a0aec0;">Ваша оценка фильма (1-10):</h4>
+                <!-- ВЫБОР ЦИФРОВОЙ ОЦЕНКИ -->
+                <select id="reviewScore">
+                    <option value="10">10 — Шедевр</option>
+                    <option value="9">9 — Великолепно</option>
+                    <option value="8">8 — Отлично</option>
+                    <option value="7">7 — Хорошо</option>
+                    <option value="6">6 — Нормально</option>
+                    <option value="5">5 — Средне</option>
+                    <option value="4">4 — Скучновато</option>
+                    <option value="3">3 — Плохо</option>
+                    <option value="2">2 — Очень плохо</option>
+                    <option value="1">1 — Ужасно</option>
+                </select>
+                
+                <h4 style="margin: 10px 0 5px 0; color: #a0aec0;">Текст рецензии:</h4>
+                <textarea id="reviewText" rows="3" placeholder="Поделитесь вашим мнением о фильме..."></textarea>
+                <button onclick="submitReview()" style="background-color: #00ff66; color: #0b0f19; width: auto; margin-top: 5px; padding: 8px 15px;">Опубликовать</button>
+            </div>
+
+            <div id="reviewGuestNotice" style="color: #a0aec0; font-size: 13px; margin-bottom: 15px; font-style: italic;">
+                ⚠️ Чтобы выставить оценку и написать рецензию, пожалуйста, войдите в свой личный кабинет на главной странице.
+            </div>
+
+            <div id="reviewsListContainer"></div>
+        </div>
+    </div>
+        <script>
+        const currentUser = localStorage.getItem('xFilmSession') || "";
+
+        // Открываем форму только для авторизованных зрителей
+        if (currentUser && currentUser !== "") {
+            document.getElementById('addReviewForm').classList.remove('hidden');
+            document.getElementById('reviewGuestNotice').classList.add('hidden');
+        }
+
+        if (!localStorage.getItem('xFilmReviews')) {
+            localStorage.setItem('xFilmReviews', JSON.stringify({"murzazel": [], "howmurzazelwascreated": []}));
+        }
+
+        function getReviews() { return JSON.parse(localStorage.getItem('xFilmReviews')); }
+        function saveReviews(reviews) { localStorage.setItem('xFilmReviews', JSON.stringify(reviews)); }
+
+        // УМНЫЙ ЦВЕТОВОЙ ИНДИКАТОР КЛАССОВ (1-4 красный, 5-6 серый, 7-10 зеленый)
+        function getScoreCategory(score) {
+            const num = parseInt(score);
+            if (num >= 7) return "good";
+            if (num >= 5) return "neutral";
+            return "bad";
+        }
+
+        // ОТРИСОВКА ОЦЕНОК И НЕОНОВЫХ КАРТОЧЕК
+        function renderReviews() {
+            const allReviews = getReviews();
+            const container = document.getElementById('reviewsListContainer');
+            container.innerHTML = '';
+
+            const murzReviews = allReviews["murzazel"] || [];
+
+            if (murzReviews.length === 0) {
+                container.innerHTML = '<div style="color: #a0aec0; font-size: 14px; font-style: italic;">Рецензий и оценок пока нет. Оставьте первую!</div>';
+                return;
+            }
+
+            for (let i = murzReviews.length - 1; i >= 0; i--) {
+                const r = murzReviews[i];
+                const card = document.createElement('div');
+                
+                // Высчитываем категорию цвета по оценке
+                const category = getScoreCategory(r.score);
+                card.className = `review-card score-${category}`;
+                
+                let deleteButtonHtml = "";
+                if (currentUser === r.author || currentUser === "admin") {
+                    deleteButtonHtml = `<button class="del-review-btn" onclick="deleteReview(${i})">[Удалить]</button>`;
+                }
+
+                card.innerHTML = `
+                    <div class="review-author">
+                        <span>
+                            <span class="review-score badge-${category}">${r.score} / 10</span>
+                            <strong>${r.author}</strong> ${deleteButtonHtml}
+                        </span>
+                        <span>📅 ${r.date}</span>
+                    </div>
+                    <div class="review-text">${r.text}</div>
+                `;
+                container.appendChild(card);
+            }
+        }
+
+        // ПУБЛИКАЦИЯ РЕЦЕНЗИИ С ЦИФРОВОЙ ОЦЕНКОЙ
+        function submitReview() {
+            const text = document.getElementById('reviewText').value.trim();
+            const score = document.getElementById('reviewScore').value;
+
+            if (!text) { alert("Пожалуйста, напишите текст вашей рецензии!"); return; }
+
+            const allReviews = getReviews();
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('ru-RU') + " " + now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'});
+
+            // Записываем новую оценку и текст в массив фильма
+            allReviews["murzazel"].push({
+                author: currentUser,
+                score: score,
+                text: text,
+                date: dateStr
+            });
+
+            saveReviews(allReviews);
+            document.getElementById('reviewText').value = ""; // Очищаем поле ввода
+            renderReviews(); // Моментально обновляем экран
+        }
+
+        // АВТОРСКОЕ ИЛИ АДМИНИСТРАТОРСКОЕ УДАЛЕНИЕ ОЦЕНКИ
+        function deleteReview(index) {
+            const allReviews = getReviews();
+            const review = allReviews["murzazel"][index];
+
+            if (currentUser === review.author || currentUser === "admin") {
+                if (confirm("Вы уверены, что хотите навсегда удалить эту оценку и отзыв?")) {
+                    allReviews["murzazel"].splice(index, 1);
+                    saveReviews(allReviews);
+                    renderReviews();
+                }
+            } else {
+                alert("Ошибка! Вы можете удалять только свои собственные оценки!");
+            }
+        }
+
+        renderReviews();
+    </script>
+</body>
+</html>

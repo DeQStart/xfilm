@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>ИксФильм — Платформа Стриминга</title>
+    <style>
+        body { background-color: #0b0f19; color: #ffffff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { background-color: #161f30; padding: 30px; border-radius: 15px; text-align: center; max-width: 500px; width: 100%; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        .catalog-container { max-width: 900px; }
+        .hidden { display: none !important; }
+        h1 { color: #00ff66; margin-bottom: 5px; }
+        h3 { color: #a0aec0; margin-top: 0; font-weight: 400; font-size: 14px; }
+        input { width: 90%; padding: 12px; margin: 8px 0; border: 2px solid #2d3748; border-radius: 8px; background-color: #0b0f19; color: white; font-size: 16px; }
+        input:focus { border-color: #00ff66; outline: none; }
+        
+        button { width: 96%; padding: 12px; background-color: #00ff66; color: #0b0f19; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: all 0.3s ease; }
+        button:hover { background-color: #00ff66; color: #0b0f19; box-shadow: 0 0 20px #00ff66; transform: scale(1.02); }
+        
+        .movie-card:nth-child(2) button { background-color: #2b6cb0; color: #ffffff; }
+        .movie-card:nth-child(2) button:hover { background-color: #3182ce; color: #ffffff; box-shadow: 0 0 20px #2b6cb0; transform: scale(1.02); }
+
+                /* УНИКАЛЬНАЯ ЗОЛОТАЯ КНОПКА ДЛЯ МУРЗАЗЕЛИ */
+        .btn-gold { background-color: #d69e2e !important; color: #0b0f19 !important; }
+        .btn-gold:hover { background-color: #e5a93b !important; box-shadow: 0 0 20px #d69e2e !important; transform: scale(1.02); }
+        
+        button:disabled, button.disabled-btn { background-color: #2d3748 !important; color: #718096 !important; cursor: not-allowed !important; box-shadow: none !important; transform: none !important; }
+        
+        .link-btn { background: none; color: #00ff66; border: none; padding: 0; font-size: 14px; cursor: pointer; text-decoration: underline; margin-top: 15px; width: auto; }
+        .error { color: #ff4d4d; margin-top: 10px; font-size: 14px; }
+        .movie-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
+        .movie-card { background-color: #0b0f19; border-radius: 10px; border: 2px solid #2d3748; padding: 20px; text-align: left; display: flex; flex-direction: column; justify-content: space-between; }
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 5px; font-size: 11px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+        .badge-free { background-color: #2b6cb0; color: white; }
+        .badge-sub { background-color: #d69e2e; color: black; }
+        .movie-title { font-size: 22px; font-weight: bold; margin: 5px 0; }
+        
+        .movie-info-block { background: #161f30; padding: 10px; border-radius: 6px; font-size: 13px; margin: 10px 0; border-left: 3px solid #00ff66; color: #cbd5e0; }
+        .movie-desc { font-size: 14px; color: #a0aec0; margin-bottom: 15px; line-height: 1.4; }
+        .info-box { background-color: #0b0f19; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #2d3748; text-align: left; }
+        
+        .logout-btn { background-color: #ff4d4d; color: white; margin-top: 20px; width: auto; padding: 8px 15px; margin-left: 10px; transition: all 0.3s ease; }
+        .logout-btn:hover { background-color: #ff3333; box-shadow: 0 0 15px #ff4d4d; }
+        .nav-btn { background-color: #4a5568; color: white; width: auto; padding: 8px 15px; margin-top: 20px; transition: all 0.3s ease; }
+        .nav-btn:hover { background-color: #718096; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        
+        .admin-panel { margin-top: 30px; border-top: 2px dashed #2d3748; padding-top: 20px; text-align: left; max-width: 100%; }
+        .user-row { background: #0b0f19; padding: 12px; margin: 8px 0; border-radius: 8px; font-size: 14px; border: 1px solid #2d3748; }
+        .user-info { display: block; margin-bottom: 8px; color: #cbd5e0; }
+        .user-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+        .action-btn { padding: 5px 10px; font-size: 12px; width: auto; margin: 0; font-weight: bold; border-radius: 4px; }
+        .btn-green { background-color: #00ff66; color: black; }
+        .btn-red { background-color: #ff4d4d; color: white; }
+        .btn-purple { background-color: #9f7aea; color: white; }
+        .btn-gray { background-color: #4a5568; color: white; }
+
+                /* ЦВЕТНЫЕ ЗОНЫ НЕОНОВОГО РЕЙТИНГА */
+        .score-good { border: 2px solid #00ff66 !important; background-color: #0b0f19 !important; box-shadow: 0 0 15px rgba(0, 255, 102, 0.4) !important; color: #00ff66 !important; font-weight: bold; }
+        .score-neutral { border: 2px solid #a0aec0 !important; background-color: #0b0f19 !important; box-shadow: 0 0 15px rgba(160, 174, 192, 0.2) !important; color: #edf2f7 !important; font-weight: bold; }
+        .score-bad { border: 2px solid #ff4d4d !important; background-color: #0b0f19 !important; box-shadow: 0 0 15px rgba(255, 77, 77, 0.4) !important; color: #ff4d4d !important; font-weight: bold; }
+
+    </style>
+</head>
+<body>
+        <!-- СТРАНИЦА 1: КАТАЛОГ -->
+    <div class="container catalog-container" id="catalogBlock">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1 style="margin: 0;">Каталог ИксФильм</h1>
+            <div>
+                <span id="userStatusLabel" style="color: #a0aec0; font-size: 14px; margin-right: 15px;">Режим: Гость 👁️</span>
+                <button id="authNavBtn" class="nav-btn" onclick="switchScreen('loginBlock')" style="margin: 0; background-color: #00ff66; color: black;">Войти</button>
+                <button id="logoutNavBtn" class="logout-btn hidden" onclick="logout()" style="margin: 0;">Выйти</button>
+            </div>
+        </div>
+
+                <!-- СТРОКА МГНОВЕННОГО ПОИСКА ФИЛЬМОВ -->
+        <div style="margin: 15px 0 5px 0; text-align: left;">
+            <input type="text" id="movieSearchInput" oninput="filterMovies()" placeholder="🔍 Поиск фильмов по названию, стране или городу съемок..." style="width: 97%; padding: 12px; font-size: 15px; border-radius: 8px;">
+        </div>
+
+        <div class="movie-grid">
+                        <!-- КАРТОЧКА МУРЗАЗЕЛЬ С РАБОЧЕЙ КНОПКОЙ И ПОСТЕРОМ -->
+            <div class="movie-card" style="background-image: linear-gradient(rgba(11, 15, 25, 0.85), rgba(11, 15, 25, 0.85)), url(''); background-size: cover; background-position: center;">
+                <div>
+                    <span class="badge badge-sub" style="background-color: #d69e2e; color: black;">Подписка (75 руб)</span>
+                    <span onclick="openInfoModal('murzazel')" style="color: #00ff66; font-size: 13px; cursor: pointer; text-decoration: underline; display: block; margin-top: 5px;">📄 Подробнее о фильме</span>
+                    <div class="movie-title">МУРЗАЗЕЛЬ</div>
+                    <div class="movie-info-block">
+                        📅 <strong>Год:</strong> 2026 г. | 🌍 <strong>Страна:</strong> Россия | 📍 <strong>Съемки:</strong> Тюмень | В главных ролях: Красавчик | Режиссёр: Давид Ващенко
+                                            <!-- СРЕДНИЙ РЕЙТИНГ ФИЛЬМА (ОБНОВЛЯЕТСЯ АВТОМАТИЧЕСКИ) -->
+                    <div style="margin: 10px 0; text-align: left;">
+                        <span id="murzazelRatingBadge" class="review-score score-neutral" style="font-size: 13px; padding: 4px 8px;">Рейтинг: 0.0 / 10 (Оценок: 0)</span>
+                    </div>
+
+                    <!-- ЭКСПРЕСС-ОЦЕНКА В 1 КЛИК ДЛЯ АВТОРИЗОВАННЫХ -->
+                    <div id="quickRateBlock" style="margin: 10px 0; text-align: left; background: rgba(255,255,255,0.02); padding: 8px; border-radius: 6px; border: 1px dashed #2d3748;">
+                        <span style="font-size: 12px; color: #a0aec0; display: block; margin-bottom: 5px;">Быстрая оценка фильма:</span>
+                        <select id="quickScoreSelect" style="width: auto; padding: 4px; font-size: 13px; background: #0b0f19; color: white; border-radius: 4px;">
+                            <option value="10">10</option><option value="9">9</option><option value="8">8</option><option value="7">7</option>
+                            <option value="6">6</option><option value="5">5</option>
+                            <option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option>
+                        </select>
+                        <button onclick="submitQuickVote('murzazel')" style="width: auto; padding: 4px 10px; font-size: 12px; margin: 0 0 0 5px; display: inline-block;">Оценить</button>
+                    </div>
+                    </div>
+                    <div class="movie-desc">Маркиз Барсович Мурдорин расследует дело о тайном ордене насекомых в теплице.</div>
+                </div>
+                <!-- Кнопка снова активна для всех вошедших! -->
+                <button onclick="tryOpenMovie('murzazel')">Смотреть фильм</button>
+            </div>
+
+            <div class="movie-card">
+                <div>
+                    <span class="badge" style="background-color: #4a5568; color: white;">В кино с 16 июля, цифровая премьера - 18 июля</span>
+                    <div class="movie-title">КОШАЧИЙ МЯУБИТ</div>
+                    <div class="movie-info-block">
+                        📅 <strong>Год:</strong> 2026 г. | 🌍 <strong>Страна:</strong> Россия | 📍 <strong>Съемки:</strong> Тюмень
+                    </div>
+                    <div class="movie-desc">Исторический детектив. Вторая часть трилогии. Рискованная игра Маркиза Барсовича против неуловимого шпиона Анвар-эфенди по мотивам шпионского романа.</div>
+                </div>
+                <button disabled class="disabled-btn">18 июля</button>
+            </div>
+
+            <div class="movie-card">
+                <div>
+                    <span class="badge" style="background-color: #4a5568; color: white;">Отменён</span>
+                    <span onclick="openInfoModal('theworstfilm')" style="color: #00ff66; font-size: 13px; cursor: pointer; text-decoration: underline; display: block; margin-top: 5px;">📄 Подробнее о фильме</span>
+                    <div class="movie-title">Самый худший фильм</div>
+                    <div class="movie-info-block">
+                        📅 <strong>Год:</strong> 2026 г. | 🌍 <strong>Страна:</strong> Россия | 📍 <strong>Съемки:</strong> Тюмень
+                    </div>
+                    <div class="movie-desc">Режиссёр, не умеющий снимать фильмы, пытается переснять российские хиты последних лет</div>
+                </div>
+                <button disabled class="disabled-btn">Отменён</button>
+            </div>
+        </div>
+
+        <div class="admin-panel hidden" id="adminPanel">
+            <h2 style="color: #00ff66; font-size: 18px; margin: 0 0 10px 0;">Управление пользователями и правами (Автономная система)</h2>
+            <div id="usersList"></div>
+            <button onclick="exportDatabase()" style="background-color: #cbd5e0; color: black; margin-top: 15px; font-size: 14px; padding: 8px; width: auto; font-weight: bold;">📋 Получить новый код базы для Блокнота</button>
+        </div>
+    </div>
+        <!-- НОВЫЕ СТИЛИ ДЛЯ ВСПЛЫВАЮЩЕГО ОКНА ИНФОРМАЦИИ -->
+    <style>
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 15, 25, 0.9); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background-color: #161f30; padding: 30px; border-radius: 15px; max-width: 600px; width: 90%; border: 2px solid #00ff66; box-shadow: 0 0 25px rgba(0, 255, 102, 0.3); text-align: left; position: relative; animation: fadeIn 0.3s ease; }
+        .modal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: #ff4d4d; font-size: 24px; font-weight: bold; cursor: pointer; width: auto; margin: 0; padding: 0; }
+        .modal-close:hover { color: #ff3333; text-shadow: 0 0 10px #ff4d4d; }
+        .modal-fact { background: #0b0f19; padding: 10px; border-radius: 6px; font-size: 13px; margin: 8px 0; color: #cbd5e0; border-left: 3px solid #2b6cb0; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    </style>
+
+    <!-- СЕКРЕТНОЕ ОКНО ПОДРОБНОЙ ИНФОРМАЦИИ (ПО УМОЛЧАНИЮ СКРЫТО) -->
+    <div class="modal-overlay hidden" id="infoModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeInfoModal()">×</button>
+            <h2 id="modalMovieTitle" style="color: #00ff66; margin-top: 0; font-size: 26px;">Название фильма</h2>
+            <div id="modalMovieMeta" class="movie-info-block">Мета-данные</div>
+            
+            <p id="modalMovieDesc" style="font-size: 15px; color: #cbd5e0; line-height: 1.5; margin-bottom: 20px;">Полное шпионское описание...</p>
+            
+            <h4 style="color: #a0aec0; margin: 15px 0 5px 0;" id="modalFactsTitle">Засекреченные факты со съёмок:</h4>
+            <div id="modalMovieFacts"></div>
+        </div>
+    </div>
+
+
+    <!-- СТРАНИЦА 2: ВХОД -->
+    <div class="container hidden" id="loginBlock">
+        <h1>Вход в систему</h1>
+        <p>Личный кабинет пользователя</p>
+        <input type="text" id="loginUser" placeholder="Логин">
+        <input type="password" id="loginPass" placeholder="Пароль">
+        <button onclick="handleLogin()">Войти</button>
+        <div class="error" id="loginError"></div>
+        <button class="link-btn" onclick="switchScreen('regBlock')">Создать аккаунт (Регистрация)</button><br>
+        <button class="nav-btn" onclick="switchScreen('catalogBlock')">Назад в каталог</button>
+    </div>
+
+    <!-- СТРАНИЦА 3: РЕГИСТРАЦИЯ -->
+    <div class="container hidden" id="regBlock">
+        <h1>Регистрация</h1>
+        <h3>Создание нового профиля</h3>
+        <input type="text" id="regUser" placeholder="Логин (Латиница)">
+        <input type="password" id="regPass" placeholder="Пароль">
+        <button onclick="handleRegister()">Зарегистрироваться</button>
+        <div class="error" id="regError"></div>
+        <button class="link-btn" onclick="switchScreen('loginBlock')">Уже есть аккаунт? Войти</button><br>
+        <button class="nav-btn" onclick="switchScreen('catalogBlock')">Назад в каталог</button>
+    </div>
+
+    <!-- СТРАНИЦА 4: ОКНО "ДОСТУП ОГРАНИЧЕН" -->
+
+         <!-- КРЕАТИВНОЕ ОКНО ПРЕМЬЕРЫ -->
+    <div class="modal-overlay hidden" id="premiereModal">
+        <div class="modal-content" style="border-color: #d69e2e; box-shadow: 0 0 25px rgba(214, 158, 46, 0.4); text-align: center; max-width: 450px;">
+            <button class="modal-close" onclick="document.getElementById('premiereModal').classList.add('hidden')">×</button>
+            
+            <div style="font-size: 12px; color: #d69e2e; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; margin-bottom: 10px;">🌟 ИксФильм Анонс 🌟</div>
+            <h2 style="color: #ffffff; margin: 0 0 10px 0; font-size: 28px; font-weight: 900; letter-spacing: 1px;">МУРЗАЗЕЛЬ</h2>
+            
+            <div style="background: #0b0f19; padding: 15px; border-radius: 8px; border: 1px dashed #d69e2e; margin: 15px 0; font-family: monospace;">
+                <div style="font-size: 18px; color: #00ff66; font-weight: bold;">🎥 ФИЛЬМ ВЫЙДЕТ 5 ИЮЛЯ 🎥</div>
+                <div style="font-size: 12px; color: #a0aec0; margin-top: 5px;">Локация: Премьерный зал (Тюмень)</div>
+            </div>
+            
+            <p style="font-size: 14px; color: #cbd5e0; line-height: 1.5; font-style: italic;">
+                "Камера заряжена, УАЗ Буханка готова, Маркиз Барсович повторяет шпионские укусы. Ждём завершения съёмок и монтажа!"
+            </p>
+            
+            <button onclick="document.getElementById('premiereModal').classList.add('hidden')" style="background-color: #d69e2e; color: #0b0f19; width: auto; padding: 10px 25px; margin-top: 15px;" class="btn-gold">Понял, жду премьеру!</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="payBlock">
+        <h1>Доступ ограничен 🔒</h1>
+        <p>Этот шедевр доступен только зарегистрированным пользователям с активной подпиской.</p>
+        <div class="info-box">
+            <strong>Инструкция по активации подписки:</strong><br>
+            1. Зарегистрируйтесь на сайте и войдите в аккаунт.<br>
+            2. Переведите <strong>75 рублей</strong> Администратору за месячный доступ [travel].<br>
+            3. Сообщите ваш логин. Администрация мгновенно активирует вам подписку.
+        </div>
+        <button id="payBlockRegBtn" class="nav-btn" onclick="switchScreen('regBlock')" style="background-color: #00ff66; color: black;">Зарегистрироваться / Войти</button>
+        <button class="nav-btn" onclick="switchScreen('catalogBlock')">Назад в каталог</button>
+    </div>
+
+    
+        <script>
+                    // ИНИЦИАЛИЗАЦИЯ БАЗЫ ЧИСТЫХ ОЦЕНОК (БЕЗ ТЕКСТА)
+        if (!localStorage.getItem('xFilmScoresOnly')) {
+            localStorage.setItem('xFilmScoresOnly', JSON.stringify({"murzazel": []}));
+        }
+
+        function getScoresOnly() { return JSON.parse(localStorage.getItem('xFilmScoresOnly')); }
+        function saveScoresOnly(data) { localStorage.setItem('xFilmScoresOnly', JSON.stringify(data)); }
+
+        // МАТЕМАТИЧЕСКИЙ РАСЧЕТ И ОКРАСКА ЗОН РЕЙТИНГА
+                // МАТЕМАТИЧЕСКИЙ РАСЧЕТ И ОКРАСКА ЗОН С УЧЕТОМ УНИКАЛЬНЫХ ГОЛОСОВ
+        function updateMovieRatingView(movieId) {
+            const db = getScoresOnly();
+            const votes = db[movieId] || [];
+            const badge = document.getElementById(movieId + 'RatingBadge');
+            if (!badge) return;
+
+            if (votes.length === 0) {
+                badge.innerText = "Рейтинг: 0.0 / 10 (Оценок: 0)";
+                badge.className = "review-score score-neutral";
+                return;
+            }
+
+            // Извлекаем только цифры баллов из шпионских записей пользователей
+            const scoreValues = votes.map(v => typeof v === 'object' ? v.score : v);
+            const sum = scoreValues.reduce((a, b) => a + b, 0);
+            const average = (sum / scoreValues.length).toFixed(1);
+
+            let colorCategory = "neutral";
+            if (average >= 7.0) colorCategory = "good";
+            else if (average < 5.0) colorCategory = "bad";
+
+            badge.innerText = `Рейтинг: ${average} / 10 (Оценок: ${scoreValues.length})`;
+            badge.className = `review-score score-${colorCategory}`;
+        }
+
+        // ПРИНЯТИЕ БЫСТРОГО ГОЛОСА
+                // ПРИНЯТИЕ БЫСТРОГО ГОЛОСА С ЗАЩИТОЙ ОТ НАКРУТКИ И ВОЗМОЖНОСТЬЮ СМЕНЫ ОЦЕНКИ
+                // ОТКРЫТОЕ ГОЛОСОВАНИЕ ДЛЯ ВСЕХ (ВКЛЮЧАЯ ГОСТЕЙ) С ЗАЩИТОЙ ОТ НАКРУТКИ
+        function submitQuickVote(movieId) {
+            const db = getScoresOnly();
+            if (!db[movieId]) db[movieId] = [];
+
+            // Определяем, кто голосует: авторизованный юзер или анонимный Гость
+            let voterId = currentUser;
+            if (!voterId || voterId === "") {
+                // Если это Гость, проверяем, есть ли у него уже выданный шпионский ID в браузере
+                voterId = localStorage.getItem('xFilmGuestID');
+                if (!voterId) {
+                    // Если нет, создаем для этого устройства вечный уникальный номер
+                    voterId = "guest_" + Math.random().toString(36).substring(2, 9);
+                    localStorage.setItem('xFilmGuestID', voterId);
+                }
+            }
+
+            // Шпионский поиск: проверяем, голосовал ли уже этот компьютер/телефон ранее
+            const existingVoteIndex = db[movieId].findIndex(v => v.user === voterId);
+
+            if (existingVoteIndex !== -1) {
+                // Если уже голосовал — просто обновляем балл
+                db[movieId][existingVoteIndex].score = parseInt(document.getElementById('quickScoreSelect').value);
+                alert("Ваша оценка успешно обновлена в общем рейтинге!");
+            } else {
+                // Если зашел впервые — записываем новый голос
+                db[movieId].push({ user: voterId, score: parseInt(document.getElementById('quickScoreSelect').value) });
+                alert("Ваша оценка учтена в общем рейтинге!");
+            }
+            
+            saveScoresOnly(db);
+            updateMovieRatingView(movieId);
+        }
+
+        // Допишите вызов функции внутрь вашей существующей restoreSession(), чтобы рейтинг обновлялся при старте:
+        // updateMovieRatingView('murzazel');
+        
+        // АВТОМАТИЧЕСКАЯ ФИКСАЦИЯ И ВОССТАНОВЛЕНИЕ СЕССИИ ПРИ ЗАПУСКЕ
+        let currentUser = localStorage.getItem('xFilmSession') || "";
+
+                // РЕЕСТР ID ФИЛЬМОВ — ДОБАВЛЯЙТЕ СЮДА НОВЫЕ СТРОЧКИ С НАЗВАНИЯМИ
+        const movieRegistry = {
+            "howmurzazelwascreated": { file: "howmurzazelwascreated.html", isFree: true },
+            "murzazel":  { file: "murzazel.html", isFree: false },
+            "theworstfilm":  { file: "", isFree: false }
+        };
+
+        // ЖЕСТКАЯ БАЗА ПОЛЬЗОВАТЕЛЕЙ (Даты зафиксированы на 03.07.2026)
+        const hardcodedUsers = {
+            "deqstart": { pass: "Ym9zczIwMjY=", active: true, isAdmin: true, subDate: null },
+            "oksana1981": { pass: "bWFtYTIwMjY=", active: true, isAdmin: false, subDate: 1783080000000 },
+            "alexandrprolux": { pass: "cGFwYTIwMjY=", active: true, isAdmin: false, subDate: 1783080000000 },
+            "artshoot": { pass: "YXJ0eW9tc2hvb3QyMDEz", active: false, isAdmin: false, subDate: 1783080000000 },
+            "xselent": { pass: "YnVjaDE1MDE=", active: false, isAdmin: false, subDate: 1783080000000 },
+        };
+
+        if (!localStorage.getItem('xFilmUsers')) {
+            localStorage.setItem('xFilmUsers', JSON.stringify(hardcodedUsers));
+                } else {
+            // Умная синхронизация: берем из Блокнота только пароли, но НЕ затираем новую дату подписки!
+            const currentMem = JSON.parse(localStorage.getItem('xFilmUsers'));
+            for (let name in hardcodedUsers) {
+                if (!currentMem[name]) {
+                    currentMem[name] = hardcodedUsers[name];
+                } else {
+                    currentMem[name].pass = hardcodedUsers[name].pass; // Обновляем пароль, если сменили
+                }
+            }
+            localStorage.setItem('xFilmUsers', JSON.stringify(currentMem));
+        }
+
+        if (!localStorage.getItem('xFilmReviews')) {
+            localStorage.setItem('xFilmReviews', JSON.stringify({"murzazel": [], "howmurzazelwascreated": []}));
+        }
+
+        function getUsers() { return JSON.parse(localStorage.getItem('xFilmUsers')); }
+        function saveUsers(users) { localStorage.setItem('xFilmUsers', JSON.stringify(users)); }
+
+        // АВТОМАТИЧЕСКИЙ РАСЧЕТ СРОКА ПОДПИСКИ (30 ДНЕЙ)
+        function checkSubscriptionStatus(userObj) {
+            if (!userObj) return { text: "Подписка: Не оформлена 🔒", valid: false };
+            if (userObj.isAdmin) return { text: "Безлимитный доступ (Администратор) 👑", valid: true };
+            if (!userObj.active || !userObj.subDate) return { text: "Подписка: Не оформлена 🔒", valid: false };
+
+            const msPerDay = 24 * 60 * 60 * 1000;
+            const startDate = new Date(userObj.subDate);
+            const expiryDate = new Date(userObj.subDate + (30 * msPerDay));
+            const now = new Date();
+            const dateStr = startDate.toLocaleDateString('ru-RU');
+
+            if (now > expiryDate) {
+                return { text: `Подписка ИСТЕКЛА 🟥 (Была оформлена: ${dateStr})`, valid: false };
+            } else {
+                const daysLeft = Math.ceil((expiryDate - now) / msPerDay);
+                return { text: `Подписка АКТИВНА 🟩 (Оформлена: ${dateStr}. Осталось дней: ${daysLeft})`, valid: true };
+            }
+        }
+
+        // ПЕРЕКЛЮЧЕНИЕ ШАПКИ САЙТА НА ВЕРНЫЙ АККАУНТ
+        function restoreSession() {
+            if (currentUser && currentUser !== "") {
+                const users = getUsers();
+                if (users[currentUser]) {
+                    const subInfo = checkSubscriptionStatus(users[currentUser]);
+                    document.getElementById('userStatusLabel').innerText = `Пользователь: ${currentUser} | ${subInfo.text}`;
+                    
+                    document.getElementById('authNavBtn').classList.add('hidden');
+                    document.getElementById('logoutNavBtn').classList.remove('hidden');
+                    document.getElementById('payBlockRegBtn').classList.add('hidden');
+
+                    if (users[currentUser].isAdmin) {
+                        document.getElementById('adminPanel').classList.remove('hidden');
+                        renderAdminPanel();
+                    } else {
+                        document.getElementById('adminPanel').classList.add('hidden');
+                    }
+                }
+            }
+                        // Автоматически запускаем расчёт и зажигаем неон при старте
+            if (typeof updateMovieRatingView === "function") {
+                updateMovieRatingView('murzazel');
+            }
+        }
+
+        // Запуск проверки при каждом открытии сайта
+        window.onload = restoreSession;
+
+                // ФУНКЦИЯ МГНОВЕННОГО ПОИСКА И ФИЛЬТРАЦИИ КАРТОЧЕК
+                // ФУНКЦИЯ ВЫСОКОТОЧНОГО ЖИВОГО ПОИСКА
+        function filterMovies() {
+            const query = document.getElementById('movieSearchInput').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.movie-grid .movie-card');
+
+            cards.forEach(card => {
+                // Находим внутри карточки только заголовки и информационные блоки
+                const title = card.querySelector('.movie-title').innerText.toLowerCase();
+                const infoBlock = card.querySelector('.movie-info-block').innerText.toLowerCase();
+
+                // Проверяем совпадение только по названию или городам съёмок
+                if (title.includes(query) || infoBlock.includes(query)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        function switchScreen(screenId) {
+            document.getElementById('catalogBlock').classList.add('hidden');
+            document.getElementById('loginBlock').classList.add('hidden');
+            document.getElementById('regBlock').classList.add('hidden');
+            document.getElementById('payBlock').classList.add('hidden');
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function handleRegister() {
+            const user = document.getElementById('regUser').value.toLowerCase().trim();
+            const pass = document.getElementById('regPass').value.trim();
+            const error = document.getElementById('regError');
+            if (!user || !pass) { error.innerText = "Заполните все поля!"; return; }
+
+                        // ШПИОНСКИЙ ФИЛЬТР БЕЗОПАСНОСТИ: ПРОВЕРКА НА ЛИМИТ В 8 СИМВОЛОВ
+            if (pass.length < 8) {
+                document.getElementById('regError').innerText = "Пароль слишком короткий! Придумайте минимум 8 символов.";
+                return;
+            }
+
+            const users = getUsers();
+            if (users[user]) { error.innerText = "Этот логин уже занят!"; return; }
+
+            users[user] = { pass: btoa(pass), active: false, isAdmin: false, subDate: null }; 
+            saveUsers(users);
+            alert("Регистрация успешна! Теперь вы можете войти.");
+            switchScreen('loginBlock');
+        }
+
+        function handleLogin() {
+            const user = document.getElementById('loginUser').value.toLowerCase().trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            const error = document.getElementById('loginError');
+            
+            if (!user || !pass) { error.innerText = "Заполните все поля!"; return; }
+
+            const users = getUsers();
+
+            if (users[user] && users[user].pass === btoa(pass)) {
+                currentUser = user;
+                localStorage.setItem('xFilmSession', user); // Запоминаем сессию в памяти браузера
+                error.innerText = "";
+                switchScreen('catalogBlock');
+                restoreSession();
+            } else {
+                error.innerText = "Ошибка доступа. Неверные данные!";
+            }
+        }
+
+                // КОНТРОЛЬ ДОСТУПА С УВЕДОМЛЕНИЕМ О ПРЕМЬЕРЕ
+                // КОНТРОЛЬ ДОСТУПА С КРЕАТИВНЫМ ОКНОМ
+        function tryOpenMovie(movieId) {
+            if (movieId === 'howmurzazelwascreated') {
+                window.location.href = "howmurzazelwascreated.html";
+                return;
+            } 
+            if (movieId === 'murzazel') {
+                // Если кликнул Гость — требуем подписку
+                if (!currentUser || currentUser === "") {
+                    switchScreen('payBlock');
+                    return;
+                }
+                
+                const users = getUsers();
+                const subInfo = checkSubscriptionStatus(users[currentUser]);
+                
+                if (subInfo.valid) {
+                    // ЕСЛИ ПОЛЬЗОВАТЕЛЬ АКТИВЕН: Открываем красивое золотое окно-билет!
+                    window.location.href = "murzazel.html";
+                } else {
+                    switchScreen('payBlock');
+                }
+            }
+        }
+
+        function renderAdminPanel() {
+            const users = getUsers();
+            const container = document.getElementById('usersList');
+            container.innerHTML = '';
+            
+            for (let name in users) {
+                if (name === currentUser) continue; 
+                
+                const row = document.createElement('div');
+                row.className = 'user-row';
+                
+                const subInfo = checkSubscriptionStatus(users[name]);
+                const roleText = users[name].isAdmin ? "Администратор 👑" : "Пользователь 👤";
+
+                row.innerHTML = `
+                    <div class="user-info">
+                        <strong>Логин:</strong> ${name} | <strong>Роль:</strong> ${roleText}<br>
+                        <span style="font-size: 13px; color: #a0aec0;">${subInfo.text}</span>
+                    </div>
+                    <div class="user-controls">
+                        <button class="action-btn ${users[name].active ? 'btn-red' : 'btn-green'}" onclick="toggleSubscription('${name}', ${users[name].active})">
+                            ${users[name].active ? 'Аннулировать подписку' : 'Активировать подписку (75 руб)'}
+                        </button>
+                        <button class="action-btn ${users[name].isAdmin ? 'btn-gray' : 'btn-purple'}" onclick="toggleAdmin('${name}', ${users[name].isAdmin})">
+                            ${users[name].isAdmin ? 'Снять права админа' : 'Сделать Администратором'}
+                        </button>
+                    </div>
+                `;
+                container.appendChild(row);
+            }
+        }
+
+        function toggleSubscription(username, currentStatus) {
+            const users = getUsers();
+            if (users[username]) {
+                users[username].active = !currentStatus;
+                users[username].subDate = !currentStatus ? Date.now() : null;
+                saveUsers(users);
+                renderAdminPanel();
+                alert(`Статус подписки для ${username} успешно обновлен!`);
+            }
+        }
+
+        function toggleAdmin(username, currentAdminStatus) {
+            const users = getUsers();
+            if (users[username]) {
+                users[username].isAdmin = !currentAdminStatus;
+                saveUsers(users);
+                renderAdminPanel();
+                alert(`Роль пользователя ${username} успешно изменена!`);
+            }
+        }
+
+        function exportDatabase() {
+            const users = getUsers();
+            let codeString = "        const hardcodedUsers = " + JSON.stringify(users, null, 12).trim() + ";";
+            
+            const el = document.createElement('textarea');
+            el.value = codeString;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            
+            alert("Код базы скопирован в буфер обмена!");
+        }
+
+                // БАЗА ДАННЫХ ПОДРОБНОЙ ИНФОРМАЦИИ О ФИЛЬМАХ Трилогии
+        const movieDetailsData = {
+            "murzazel": {
+                title: "МУРЗАЗЕЛЬ",
+                meta: "📅 <strong>Год:</strong> 2026 г. | 🌍 <strong>Страна:</strong> Россия | 📍 <strong>Съемки:</strong> Тюмень",
+                desc: "Грандиозный исторический детектив. Спецагент Маркиз Барсович Мурдорин расследует сложнейшее дело о тайном ордене насекомых, оккупировавших теплицу «Высшего Руководства». Ставка в этой игре — тишина всего участка.",
+                facts: [
+                    "Маркиз лично утверждал актёров на роли шмелей и гусениц.",
+                    "Оператор провёл 4 часа в зарослях укропа ради одного шпионского ракурса.",
+                    "Бюджет фильма составил рекордные 0 рублей."
+                ]
+            },
+
+            "theworstfilm": {
+                title: "Самый худший фильм",
+                meta: "📅 <strong>Год:</strong> 2026 г. | 🌍 <strong>Страна:</strong> Россия | 📍 <strong>Съемки:</strong> Тюмень",
+                desc: "Горе-кинодел Игорь Червяков, посмотрев самые популярные российские хиты последних лет, пытается переснять их. Комедия, основанная на фильме Comedy Club",
+                facts: [
+                    "Фильм был основан на проекте Comedy Club /Самый лучший фильм/ (2009).",
+                    "Премьера фильма планировалась на 1 июля 2026 года.",
+                    "Все сцены режиссёр Давид Ващенко снимал в квартире.",
+                    "Фильм был отменён из-за отказа режиссёра от проектов с его участием в качестве актёра, не считая дубляжа (17 июня 2026 г.)"
+                ]
+            },
+
+            "murzazel": {
+                title: "МУРЗАЗЕЛЬ",
+                meta: "📅 <strong>Год:</strong> 2026 г. | 🌍 <strong>Страна:</strong> Россия | 📍 <strong>Съемки:</strong> Тюмень",
+                desc: "Грандиозный исторический детектив. Спецагент Маркиз Барсович Мурдорин расследует сложнейшее дело о тайном ордене насекомых, оккупировавших теплицу «Высшего Руководства». Ставка в этой игре — тишина всего участка.",
+                facts: [
+                    "Фильм основан на повести Бориса Акунина* /Азазель/. * - внесён в реестр иноагентов РФ",
+                    "Кота, играющего Маркиза, зовут Красавчик, и на момент съёмок фильма ему был всего год.",
+                    "Бюджет фильма составил рекордные 0 рублей."
+                ]
+            },
+        };
+
+        // ОТКРЫТИЕ МОДАЛЬНОГО ОКНА ДОСЬЕ
+        function openInfoModal(movieId) {
+            const data = movieDetailsData[movieId];
+            if (!data) return;
+
+            document.getElementById('modalMovieTitle').innerText = data.title;
+            document.getElementById('modalMovieMeta').innerHTML = data.meta;
+            document.getElementById('modalMovieDesc').innerText = data.desc;
+
+            const factsContainer = document.getElementById('modalMovieFacts');
+            factsContainer.innerHTML = '';
+            
+            data.facts.forEach(fact => {
+                const div = document.createElement('div');
+                div.className = 'modal-fact';
+                div.innerText = `🐾 ${fact}`;
+                factsContainer.appendChild(div);
+            });
+
+            document.getElementById('infoModal').classList.remove('hidden');
+        }
+
+        // ЗАКРЫТИЕ ОКНА
+        function closeInfoModal() {
+            document.getElementById('infoModal').classList.add('hidden');
+        }
+
+
+        function logout() {
+            currentUser = "";
+            localStorage.removeItem('xFilmSession'); // Полностью стираем сессию при выходе
+            document.getElementById('userStatusLabel').innerText = "Режим: Гость 👁️";
+            document.getElementById('authNavBtn').classList.remove('hidden');
+            document.getElementById('logoutNavBtn').classList.add('hidden');
+            document.getElementById('payBlockRegBtn').classList.remove('hidden');
+            document.getElementById('adminPanel').classList.add('hidden');
+            switchScreen('catalogBlock');
+        }
+    </script>
+</body>
+</html>

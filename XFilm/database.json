@@ -1,0 +1,5 @@
+{
+    "admin": { "pass": "Ym9zczIwMjY=", "active": true, "isAdmin": true, "subDate": null },
+    "mama": { "pass": "MTIzNA==", "active": true, "isAdmin": false, "subDate": 1783080000000 },
+    "papa": { "pass": "NTY3OA==", "active": true, "isAdmin": false, "subDate": 1783080000000 }
+}
