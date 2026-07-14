@@ -214,7 +214,7 @@
 
     <div class="container hidden" id="payBlock">
         <h1>Доступ ограничен 🔒</h1>
-        <p>Этот фильм доступен только зарегистрированным пользователям с активной подпиской.</p>
+        <p>Этот шедевр доступен только зарегистрированным пользователям с активной подпиской.</p>
         <div class="info-box">
             <strong>Инструкция по активации подписки:</strong><br>
             1. Зарегистрируйтесь на сайте и войдите в аккаунт.<br>
@@ -307,7 +307,7 @@
                 // РЕЕСТР ID ФИЛЬМОВ — ДОБАВЛЯЙТЕ СЮДА НОВЫЕ СТРОЧКИ С НАЗВАНИЯМИ
         const movieRegistry = {
             "howmurzazelwascreated": { file: "howmurzazelwascreated.html", isFree: true },
-            "murzazel":  { file: "murzazel.mp4", isFree: false },
+            "murzazel":  { file: "murzazel.html", isFree: false },
             "theworstfilm":  { file: "", isFree: false }
         };
 
@@ -462,47 +462,27 @@
 
                 // КОНТРОЛЬ ДОСТУПА С УВЕДОМЛЕНИЕМ О ПРЕМЬЕРЕ
                 // КОНТРОЛЬ ДОСТУПА С КРЕАТИВНЫМ ОКНОМ
-                // УНИВЕРСАЛЬНЫЙ ЗАПУСК ПЛЕЕРА ПРЯМО ВНУТРИ СТРАНИЦЫ КАТАЛОГА
         function tryOpenMovie(movieId) {
-            const movie = movieRegistry[movieId];
-            if (!movie) return;
-
-            // Если кликнул Гость — требуем подписку
-            if (!movie.isFree && (!currentUser || currentUser === "")) {
-                switchScreen('payBlock');
+            if (movieId === 'howmurzazelwascreated') {
+                window.location.href = "howmurzazelwascreated.html";
                 return;
-            }
-
-            // Проверяем подписку за 55 рублей для платных фильмов
-            if (movie.isFree || checkSubscriptionStatus(getUsers()[currentUser]).valid) {
-                
-                // Шпионский трюк: если отдельного файла нет, создаем плеер на лету!
-                let playerBlock = document.getElementById('playerBlock');
-                if (!playerBlock) {
-                    playerBlock = document.createElement('div');
-                    playerBlock.id = 'playerBlock';
-                    playerBlock.className = 'container catalog-container hidden';
-                    playerBlock.innerHTML = `
-                        <h1 id="playerTitle" style="color: #00ff66;"></h1>
-                        <div class="movie-info-block" id="playerMeta"></div>
-                        <video controls id="mainVideo" style="width: 100%; border-radius: 10px; border: 2px solid #2d3748; margin-top: 15px; background: #000;"></video>
-                        <br>
-                        <button class="nav-btn" onclick="switchScreen('catalogBlock')" style="background-color: #ff4d4d; color: white; margin-top: 15px;">⬅ Назад в каталог</button>
-                    `;
-                    document.body.appendChild(playerBlock);
+            } 
+            if (movieId === 'murzazel') {
+                // Если кликнул Гость — требуем подписку
+                if (!currentUser || currentUser === "") {
+                    switchScreen('payBlock');
+                    return;
                 }
-
-                // Загружаем данные фильма из нашего реестра ID
-                document.getElementById('playerTitle').innerText = movie.title;
-                document.getElementById('playerMeta').innerHTML = movie.meta;
                 
-                const videoEl = document.getElementById('mainVideo');
-                videoEl.src = movie.file; // Берет сжатый файл movie.mp4 прямо из папки репозитория!
-                videoEl.load();
-
-                switchScreen('playerBlock');
-            } else {
-                switchScreen('payBlock');
+                const users = getUsers();
+                const subInfo = checkSubscriptionStatus(users[currentUser]);
+                
+                if (subInfo.valid) {
+                    // ЕСЛИ ПОЛЬЗОВАТЕЛЬ АКТИВЕН: Открываем красивое золотое окно-билет!
+                    window.location.href = "murzazel.html";
+                } else {
+                    switchScreen('payBlock');
+                }
             }
         }
 
